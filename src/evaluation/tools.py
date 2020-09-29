@@ -16,6 +16,17 @@ def model_label_dist(logits_list):
     return prob
 
 
+def normalize_dist(prob):
+    prob = np.asarray(prob)
+    for i, value in enumerate(prob):
+        if np.abs(value) < 1e-15:
+            prob[i] = 1e-15
+    # normalize
+    prob = prob / np.sum(prob)
+    assert np.isclose(np.sum(prob), 1)
+    return prob
+
+
 simply_nli_label_mapping = {
     'e': 'e',
     'c': 'c',
@@ -62,14 +73,18 @@ def calculate_divergence_bwt_model_human_simplify(dist_uid_dict, model_predictio
                 missing_uid.append(uid)
 
             # h_label_dist = h_dist_item['label_dist']
-            m_pred_dist = model_label_dist(pred_dict[uid]['logits'])  # notice here we're using o_uid.
+            if 'predicted_probabilities' in pred_dict[uid]:
+                m_pred_dist = normalize_dist(pred_dict[uid]['predicted_probabilities'])
+            else:
+                m_pred_dist = model_label_dist(pred_dict[uid]['logits'])  # notice here we're using o_uid.
+
             human_label_dist = np.asarray(h_dist_item['label_dist'])
             assert np.isclose(np.sum(human_label_dist), 1)
             assert np.isclose(np.sum(m_pred_dist), 1)
             # sanity check
 
             h_label_dist = h_dist_item['label_dist']
-            m_pred_dist = model_label_dist(pred_dict[uid]['logits'])  # notice here we're using o_uid.
+            # m_pred_dist = model_label_dist(pred_dict[uid]['logits'])  # notice here we're using o_uid.
 
             old_label = h_dist_item['old_label']
             new_label = h_dist_item['majority_label']
@@ -136,7 +151,11 @@ def calculate_divergence_bwt_model_human_simplify(dist_uid_dict, model_predictio
         for uid in all_correct_set:
             h_dist_item = dist_uid_dict[uid]
 
-            m_pred_dist = model_label_dist(pred_dict[uid]['logits'])  # notice here we're using o_uid.
+            if 'predicted_probabilities' in pred_dict[uid]:
+                m_pred_dist = normalize_dist(pred_dict[uid]['predicted_probabilities'])
+            else:
+                m_pred_dist = model_label_dist(pred_dict[uid]['logits'])  # notice here we're using o_uid.
+
             human_label_dist = np.asarray(h_dist_item['label_dist'])
             assert np.isclose(np.sum(human_label_dist), 1)
             assert np.isclose(np.sum(m_pred_dist), 1)

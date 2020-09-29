@@ -1,3 +1,4 @@
 tqdm
 scipy
 pandas
+seaborn

@@ -15,11 +15,11 @@ def model_perf(dataset_name, task_name, data_file, model_prediction_file):
                                                                                   model_prediction_dict, task_name)
     print('-' * 60)
     print('Data:', dataset_name)
-    print("Correct count:", len(all_correct_set))
-    print('\t'.join(['{:15s}'.format('Model Name'), '{:10s}'.format('JSD'), '{:10s}'.format('KL'),
+    print("All Correct Count:", len(all_correct_set))
+    print('\t'.join(['{:20s}'.format('Model Name'), '{:10s}'.format('JSD'), '{:10s}'.format('KL'),
                      '{:10s}'.format('Old Acc.'), '{:10s}'.format('New Acc.')]))
     for model_name, model_item in results_dict.items():
-        print('\t'.join(['{:15s}'.format(model_name),
+        print('\t'.join(['{:20s}'.format(model_name),
                          '{:10s}'.format(format_number(model_item['average JS div'])),
                          '{:10s}'.format(format_number(model_item['average KL div'])),
                          '{:10s}'.format(format_number(model_item['o_acc'])),

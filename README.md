@@ -1,13 +1,19 @@
 # Chaos NLI
 What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?
 
-# Paper
+## Paper
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://www.google.com)
 
-# Data and Format
+## Data and Format
+**Where can I download the data and what is the format?**
 
+## Results
+**How to reproduce the results on the paper?**
 
-# Scoreboard
+## Evaluate
+**What if I have a **
+
+## Scoreboard
 
 If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file**.
 

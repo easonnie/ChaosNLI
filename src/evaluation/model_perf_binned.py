@@ -88,7 +88,7 @@ def show_abdnli_binned_plot(y_axis_value):
     task_name = 'uncertainty_abdnli'
     data_file = config.CHAOSNLI_ALPHANLI
     model_pred_file = config.MODEL_PRED_ABDNLI
-    column_name = '$\\alpha$NLI'
+    column_name = 'ChaosNLI-$\\alpha$NLI'
 
     bined_item_results = model_perf_binned(dataset_name, task_name, data_file, model_pred_file, verbose=False)
     plot_histogram(bined_item_results, y_axis_value, column_name)
@@ -115,7 +115,7 @@ def show_nli_binned_plot(y_axis_value):
 
     bin_num = 5
     split_type = 'quantile'
-    column_name = 'NLI'
+    column_name = 'ChaosNLI-(S+M)NLI'
 
     bined_item = build_entropy_bins(collected_data_dict, bin_num, type=split_type)
     bined_item_results = calculate_per_bin_results_simplify(bined_item, model_prediction_dict,
@@ -125,7 +125,7 @@ def show_nli_binned_plot(y_axis_value):
 
 
 def model_perf_snli_binned():
-    dataset_name = 'Stanford Natural Language Inference (SNLI)'
+    dataset_name = 'ChaosNLI - Stanford Natural Language Inference (SNLI)'
     task_name = 'uncertainty_nli'
     data_file = config.CHAOSNLI_SNLI
     model_pred_file = config.MODEL_PRED_NLI
@@ -134,7 +134,7 @@ def model_perf_snli_binned():
 
 
 def model_perf_mnli_binned():
-    dataset_name = 'Multi-Genre Natural Language Inference (MNLI)'
+    dataset_name = 'ChaosNLI - Multi-Genre Natural Language Inference (MNLI)'
     task_name = 'uncertainty_nli'
     data_file = config.CHAOSNLI_MNLI
     model_pred_file = config.MODEL_PRED_NLI
@@ -143,7 +143,7 @@ def model_perf_mnli_binned():
 
 
 def model_perf_abdnli_binned():
-    dataset_name = 'Abductive Commonsense Reasoning (alphaNLI)'
+    dataset_name = 'ChaosNLI - Abductive Commonsense Reasoning (alphaNLI)'
     task_name = 'uncertainty_abdnli'
     data_file = config.CHAOSNLI_ALPHANLI
     model_pred_file = config.MODEL_PRED_ABDNLI

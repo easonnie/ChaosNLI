@@ -258,7 +258,7 @@ def calculate_per_bin_results_simplify(bin_partitions, model_prediction_dict, ta
             results_dict[model_name]['bin_results'][(vstart, vend)][
                 'different_majority_ratio'] = different_majority_count / total_count
 
-        print("Processed Bin Item Count:", all_count)
+        # print("Processed Bin Item Count:", all_count)
 
     return results_dict
 

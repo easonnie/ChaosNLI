@@ -29,7 +29,7 @@ def model_perf(dataset_name, task_name, data_file, model_prediction_file):
 
 
 def model_perf_snli():
-    dataset_name = 'Stanford Natural Language Inference (SNLI)'
+    dataset_name = 'ChaosNLI - Stanford Natural Language Inference (SNLI)'
     task_name = 'uncertainty_nli'
     data_file = config.CHAOSNLI_SNLI
     model_pred_file = config.MODEL_PRED_NLI
@@ -38,7 +38,7 @@ def model_perf_snli():
 
 
 def model_perf_mnli():
-    dataset_name = 'Multi-Genre Natural Language Inference (MNLI)'
+    dataset_name = 'ChaosNLI - Multi-Genre Natural Language Inference (MNLI)'
     task_name = 'uncertainty_nli'
     data_file = config.CHAOSNLI_MNLI
     model_pred_file = config.MODEL_PRED_NLI
@@ -47,7 +47,7 @@ def model_perf_mnli():
 
 
 def model_perf_abdnli():
-    dataset_name = 'Abductive Commonsense Reasoning (alphaNLI)'
+    dataset_name = 'ChaosNLI - Abductive Commonsense Reasoning (alphaNLI)'
     task_name = 'uncertainty_abdnli'
     data_file = config.CHAOSNLI_ALPHANLI
     model_pred_file = config.MODEL_PRED_ABDNLI

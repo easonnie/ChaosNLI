@@ -2,7 +2,7 @@
 What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?
 
 # Paper
-[What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](www.google.com)
+[What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://www.google.com)
 
 # Data and Format
 

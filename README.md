@@ -2,14 +2,14 @@
 What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?
 
 # Paper
-(What Can We Learn from Collective Human Opinions on Natural Language Inference Data?)[]
+[What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](www.google.com)
 
 # Data and Format
 
 
 # Scoreboard
 
-If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, **your model prediction file**.
+If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file**.
 
 
 ## License

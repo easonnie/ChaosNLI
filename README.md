@@ -4,6 +4,20 @@ What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atu
 ## Paper
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://www.google.com)
 
+## Examples
+Chaos NLI is a dataset with 100 annotations per example (a total of 4,645 * 100 annotations) for some existing data points in the development set of [SNLI](https://nlp.stanford.edu/projects/snli/), [MNLI](https://cims.nyu.edu/~sbowman/multinli/), and [AlphaNLI](http://abductivecommonsense.xyz/).
+
+### NLI Example
+Premise | Hypothesis | New Annotations | Old Annotations | BERT-Large Prediction
+--- | --- | --- | --- | ---
+For instance, when Clinton cited executive privilege as a reason for holding back a memo from FBI Director Louis Freeh criticizing his drug policies, Bob Dole asserted that the president had no basis for refusing to divulge it.|Bob Dole stated that Clinton had no right to privilege for actions not involving the presidency.|E(44), N(31), C(25)|N, C, N, N, E|E(54.8%), N(22.61%), C(23.31%)
+
+### AlphaNLI Example
+
+## Scoreboard
+
+If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file**.
+
 ## Data and Format
 ### Where can I download the data？
 **ChaosNLI** is available at https://www.dropbox.com/s/h4j7dqszmpt2679/chaosNLI_v1.0.zip.  
@@ -38,7 +52,7 @@ The repository structure should be something like:
 
 ### What is the format?
 #### Data Format
-**ChaosNLI** is in `JSONL`. Everyone line in the file is one single JavaScript Object and can be easily loaded in python dictionary.  
+**ChaosNLI** is in `JSONL`. Every line in the file is one single JavaScript Object and can be easily loaded in python dictionary.  
 The fields of the objects are self-explanatory. Please see the following sample to learn the details about the field.
 ```JS
 // ChaosNLI-(S+M)NLI  'chaosNLI_mnli_m.jsonl' and 'chaosNLI_snli.jsonl'
@@ -185,11 +199,12 @@ distilbert          	0.3133    	0.6652    	0.5472    	0.5103
 ------------------------------------------------------------
 ```
 
-To examine *the factor of human agreement on model performance*, check out this informative [jupyter-notebook](https://github.com/easonnie/chaos_nli/blob/master/src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. 
+To examine **the factor of human agreement on model performance**, check out this informative [jupyter-notebook](https://github.com/easonnie/chaos_nli/blob/master/src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. 
 
 ## Evaluate
-### I got a new method to produce a label distribution over each example in ChaosNLI. How can I evaluate my method?
-Build your prediction file according to the sample file in `data/prediction_samples`.  **Tip: You will need to popularize both the "`predicted_probabilities`" and "`predicted_label`" fields.**
+### How can I evaluate my own results?
+Build your prediction file according to the sample file in `data/prediction_samples`.  
+**Tip: You will need to popularize both the "`predicted_probabilities`" and "`predicted_label`" fields.**
 
 Then, you can evaluate your method with the following script:
 ```
@@ -197,25 +212,25 @@ Then, you can evaluate your method with the following script:
 python src/scripts/evaluate.py \
     --task_name uncertainty_nli \ 
     --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_mnli_m.jsonl \
-    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/sample_roberta_nli.json
+    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/mnli_random_baseline.json
 
 # For SNLI:
 python src/scripts/evaluate.py \
     --task_name uncertainty_nli \
     --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_snli.jsonl \
-    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/sample_roberta_nli.json
+    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/snli_random_baseline.json
 
 # For alphaNLI:
 python src/scripts/evaluate.py \
     --task_name uncertainty_abdnli
     --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_alphanli.jsonl
-    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/sample_roberta_abdnli.json
+    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/abdnli_random_baseline.json
 ```
 
-## Scoreboard
+## Citation
+```
 
-If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file**.
-
+```
 
 ## License
 **Chaos NLI** is licensed under Creative Commons-Non Commercial 4.0. See the LICENSE file for details.

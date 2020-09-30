@@ -37,7 +37,7 @@ The repository structure should be something like:
 ```
 
 ### What is the format?
-#### Data
+- **Data**
 **ChaosNLI** is in `JSONL`. Everyone line in the file is one single JavaScript Object and can be easily loaded in python dictionary.  
 The fields of the objects are self-explanatory. Please see the following sample to learn the details about the field.
 ```JS
@@ -79,7 +79,7 @@ The fields of the objects are self-explanatory. Please see the following sample 
 }
 ```
 
-#### Model Prediction
+- **Model Prediction**
 ```JS
 // ChaosNLI-alphaNLI 'data/model_predictions/model_predictions_for_abdnli.json'
 {
@@ -103,10 +103,86 @@ The fields of the objects are self-explanatory. Please see the following sample 
 }
 ```
 
+```JS
+// ChaosNLI-(S+M)NLI 'data/model_predictions/model_predictions_for_snli_mnli.json'
+{   "bert-base": 
+        {
+            "4705552913.jpg#2r1n":                      // Notices: the order in "logits" matters and should always be [E, N, C]
+                {"uid": "4705552913.jpg#2r1n", "logits": [-2.0078125, 4.453125, -2.591796875], "predicted_label": "neutral"}, 
+            "4705552913.jpg#2r1e": 
+                {"uid": "4705552913.jpg#2r1e", "logits": [3.724609375, -0.66064453125, -2.443359375], "predicted_label": "entailment"},
+            ......  // Predictions for other examples
+        },
+    "bert-large": 
+        {
+            "4705552913.jpg#2r1n":                      // Notices: the order in "logits" matters and should always be [E, N, C]
+                {"uid": "4705552913.jpg#2r1n", "logits": [-2.0234375, 4.67578125, -2.78515625], "predicted_label": "neutral"}, 
+            "4705552913.jpg#2r1e": 
+                {"uid": "4705552913.jpg#2r1e", "logits": [3.39453125, -0.673828125, -3.080078125], "predicted_label": "entailment"},
+            ......  // Predictions for other examples
+        },
+     ......  // Prediction for other models
+```
 
 ## Results
 ### How to reproduce the results on the paper?
+To reproduce the results, simply run the following script:
+```bash
+source setup.sh
+python src/evaluation/model_pref.py
+```
 
+The outputs should match with all the numbers in the table of the paper.
+```
+Load Jsonl: /Users/yixin/projects/released_codebase/chaos_nli/data/chaosNLI_v1.0/chaosNLI_alphanli.jsonl
+1532it [00:00, 54898.24it/s]
+------------------------------------------------------------
+Data: ChaosNLI - Abductive Commonsense Reasoning (alphaNLI)
+All Correct Count: 930
+Model Name          	JSD       	KL        	Old Acc.  	New Acc.
+bert-base           	0.3209    	3.7981    	0.6527    	0.6534
+xlnet-base          	0.2678    	1.0209    	0.6743    	0.6867
+roberta-base        	0.2394    	0.8272    	0.7154    	0.7396
+bert-large          	0.3055    	3.7996    	0.6802    	0.6821
+xlnet-large         	0.2282    	1.8166    	0.814     	0.8133
+roberta-large       	0.2128    	1.3898    	0.8531    	0.8368
+bart-large          	0.2215    	1.5794    	0.8185    	0.814
+albert-xxlarge      	0.2208    	2.9598    	0.844     	0.8473
+distilbert          	0.3101    	1.0345    	0.592     	0.607
+------------------------------------------------------------
+Load Jsonl: /Users/yixin/projects/released_codebase/chaos_nli/data/chaosNLI_v1.0/chaosNLI_snli.jsonl
+1514it [00:00, 71640.88it/s]
+------------------------------------------------------------
+Data: ChaosNLI - Stanford Natural Language Inference (SNLI)
+All Correct Count: 1063
+Model Name          	JSD       	KL        	Old Acc.  	New Acc.
+bert-base           	0.2345    	0.481     	0.7008    	0.7292
+xlnet-base          	0.2331    	0.5121    	0.7114    	0.7365
+roberta-base        	0.2294    	0.5045    	0.7272    	0.7536
+bert-large          	0.23      	0.5017    	0.7266    	0.7384
+xlnet-large         	0.2259    	0.5054    	0.7431    	0.7807
+roberta-large       	0.221     	0.4937    	0.749     	0.7867
+bart-large          	0.2203    	0.4714    	0.7424    	0.7827
+albert-xxlarge      	0.235     	0.5342    	0.7153    	0.7814
+distilbert          	0.2439    	0.4682    	0.6711    	0.7021
+------------------------------------------------------------
+Load Jsonl: /Users/yixin/projects/released_codebase/chaos_nli/data/chaosNLI_v1.0/chaosNLI_mnli_m.jsonl
+1599it [00:00, 50454.33it/s]
+------------------------------------------------------------
+Data: ChaosNLI - Multi-Genre Natural Language Inference (MNLI)
+All Correct Count: 816
+Model Name          	JSD       	KL        	Old Acc.  	New Acc.
+bert-base           	0.3055    	0.7204    	0.5991    	0.5591
+xlnet-base          	0.3069    	0.7927    	0.6373    	0.5891
+roberta-base        	0.3073    	0.7807    	0.6391    	0.5922
+bert-large          	0.3152    	0.8449    	0.6123    	0.5691
+xlnet-large         	0.3116    	0.8818    	0.6742    	0.6185
+roberta-large       	0.3112    	0.8701    	0.6742    	0.6354
+bart-large          	0.3165    	0.8845    	0.6635    	0.5922
+albert-xxlarge      	0.3159    	0.862     	0.6485    	0.5897
+distilbert          	0.3133    	0.6652    	0.5472    	0.5103
+------------------------------------------------------------
+```
 
 ## Evaluate
 ### I got a new method to produce a label distribution over each example in ChaosNLI. How can I evaluate my method?

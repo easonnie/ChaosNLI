@@ -189,7 +189,7 @@ To examine *the factor of human agreement on model performance*, check out this 
 
 ## Evaluate
 ### I got a new method to produce a label distribution over each example in ChaosNLI. How can I evaluate my method?
-Build your prediction file according to the sample file in `data/prediction_samples`. Tip: You will need to popularize both the "predicted_probabilities" and "predicted_label" fields.
+Build your prediction file according to the sample file in `data/prediction_samples`.  **Tip: You will need to popularize both the "`predicted_probabilities`" and "`predicted_label`" fields.**
 
 Then, you can evaluate your method with the following script:
 ```

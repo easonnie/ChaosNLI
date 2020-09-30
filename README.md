@@ -10,7 +10,7 @@ Chaos NLI is a dataset with 100 annotations per example (a total of 4,645 * 100 
 ### NLI Example
 Premise | Hypothesis | New Annotations | Old Annotations | BERT-Large Prediction
 --- | --- | --- | --- | ---
-For instance, when Clinton cited executive privilege as a reason for holding back a memo from FBI Director Louis Freeh criticizing his drug policies, Bob Dole asserted that the president had no basis for refusing to divulge it.|Bob Dole stated that Clinton had no right to privilege for actions not involving the presidency.|E(44), N(31), C(25)|N, C, N, N, E|E(54.08%), N(22.61%), C(23.31%)
+This number represents the most reliable, albeit conservative, estimate of cases closed in 1999 by LSC grantees.|This is an actual verified number of closed cases.|E(21), N(12), C(67)|C, E, C, E, E|E(15.72%), N(14.04%), C(70.24%)
 
 ### AlphaNLI Example
 Observation Start | Hypothesis 1 | Hypothesis 2 | Observation End | New Annotation | Old Annotation | BERT-Large Prediction

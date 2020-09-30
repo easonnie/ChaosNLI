@@ -18,7 +18,27 @@ Observation Start | Hypothesis 1 | Hypothesis 2 | Observation End | New Annotati
 Amy and her friends were out at 3 AM.|They started getting followed by a policeman, ran, and hid behind a building.|The decided to break into the football field. When suddenly they saw a flashlight comming towards them. They all started running for the bleachers.|They stayed there breathing hard, and praying they hadn't been seen.|1(50), 2(50)|2|1(57.53%), 2(32.47%)
 
 ## Scoreboard
+### ChaosNLI - SNLI
+Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
+--- | --- | --- | --- | --- | --- | ---
+BERT-Large | | 09-29-2020 | | | |
+RoBERT-Large | | 09-29-2020 | | | |
+XLNet-Large | | 09-29-2020 | | | |
 
+### ChaosNLI - MNLI
+Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
+--- | --- | --- | --- | --- | --- | ---
+BERT-Large | | 09-29-2020 | | | |
+RoBERT-Large | | 09-29-2020 | | | |
+XLNet-Large | | 09-29-2020 | | | |
+
+### ChaosNLI - AlphaNLI
+Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
+--- | --- | --- | --- | --- | --- | ---
+BERT-Large | | 09-29-2020 | | | |
+RoBERT-Large | | 09-29-2020 | | | |
+XLNet-Large | | 09-29-2020 | | | |
+ 
 If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file**.
 
 ## Data and Format

@@ -7,6 +7,7 @@ What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atu
 ## Data and Format
 ### Where can I download the data？
 **ChaosNLI** is available at https://www.dropbox.com/s/h4j7dqszmpt2679/chaosNLI_v1.0.zip.  
+
 Alternatively, you can download the data with the following script:
 ```bash
 # make sure you are at the root of chaos_nli directory
@@ -14,6 +15,7 @@ source setup.sh     # setup path
 bash scripts/download_data.sh
 ```
 The script will download the data and the predictions of model in the `chaos_nli/data`.  
+
 If you want to use the scripts in this repository to reproduce the results, please make sure the data is downloaded in the correct path.  
 Your repository file should be something like:
 ```

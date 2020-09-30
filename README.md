@@ -14,7 +14,7 @@ Alternatively, you can download the data with the following script:
 source setup.sh     # setup path
 bash scripts/download_data.sh
 ```
-The script will download the data and the predictions of model in the `chaos_nli/data`.  
+The script will not only download the ChaosNLI data and but also the predictions of model in the `chaos_nli/data`.  
 
 If you want to use the scripts in this repository to reproduce the results, please make sure the data is downloaded in the correct path.  
 The repository structure should be something like:
@@ -37,7 +37,7 @@ The repository structure should be something like:
 ```
 
 ### What is the format?
-- **Data**
+#### Data Format
 **ChaosNLI** is in `JSONL`. Everyone line in the file is one single JavaScript Object and can be easily loaded in python dictionary.  
 The fields of the objects are self-explanatory. Please see the following sample to learn the details about the field.
 ```JS
@@ -79,7 +79,8 @@ The fields of the objects are self-explanatory. Please see the following sample 
 }
 ```
 
-- **Model Prediction**
+#### Model Prediction Format
+We also provide the predictions of BERT, RoBERTa, XLNet, BART, ALBERT, DistilBERT on SNLI, MNLI, and alphaNLI. The data can also be found in `data/model_predictions`.
 ```JS
 // ChaosNLI-alphaNLI 'data/model_predictions/model_predictions_for_abdnli.json'
 {
@@ -188,6 +189,28 @@ To examine *the factor of human agreement on model performance*, check out this 
 
 ## Evaluate
 ### I got a new method to produce a label distribution over each example in ChaosNLI. How can I evaluate my method?
+Build your prediction file according to the sample file in `data/prediction_samples`. Tip: You will need to popularize both the "predicted_probabilities" and "predicted_label" fields.
+
+Then, you can evaluate your method with the following script:
+```
+# For MNLI:
+python src/scripts/evaluate.py \
+    --task_name uncertainty_nli \ 
+    --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_mnli_m.jsonl \
+    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/sample_roberta_nli.json
+
+# For SNLI:
+python src/scripts/evaluate.py \
+    --task_name uncertainty_nli \
+    --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_snli.jsonl \
+    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/sample_roberta_nli.json
+
+# For alphaNLI:
+python src/scripts/evaluate.py \
+    --task_name uncertainty_abdnli
+    --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_alphanli.jsonl
+    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/sample_roberta_abdnli.json
+```
 
 ## Scoreboard
 

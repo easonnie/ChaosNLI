@@ -39,7 +39,7 @@ BERT-Large | | 09-29-2020 | | | |
 RoBERT-Large | | 09-29-2020 | | | |
 XLNet-Large | | 09-29-2020 | | | |
  
-If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file**.
+If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file** (please follow the [instruction](https://github.com/easonnie/chaos_nli#how-can-i-evaluate-my-own-results) to build and test your prediction file).
 
 ## Data and Format
 ### Where can I download the data？

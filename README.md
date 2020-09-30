@@ -184,6 +184,8 @@ distilbert          	0.3133    	0.6652    	0.5472    	0.5103
 ------------------------------------------------------------
 ```
 
+To examine *the factor of human agreement on model performance*, check out this informative [jupyter-notebook](https://github.com/easonnie/chaos_nli/blob/master/src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. 
+
 ## Evaluate
 ### I got a new method to produce a label distribution over each example in ChaosNLI. How can I evaluate my method?
 

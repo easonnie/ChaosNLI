@@ -62,11 +62,11 @@ def plot_histogram(binned_item_results, y_axis_value, column_name):
                      data=result_items)
 
     if y_axis_value == 'Accuracy':
-        ax.set_ylabel(f"Acc. on {column_name}")
+        ax.set_ylabel(f"Acc. on {column_name}", fontsize=10)
         ax.set_ylim(0.4, 1.0)
         ax.set_yticks([0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
     elif y_axis_value == 'JSD':
-        ax.set_ylabel(f"JSD on {column_name}")
+        ax.set_ylabel(f"JSD on {column_name}", fontsize=10)
         ax.set_ylim(0.0, 0.5)
         ax.set_yticks([0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
 
@@ -75,12 +75,14 @@ def plot_histogram(binned_item_results, y_axis_value, column_name):
     ax.legend(loc='upper left', bbox_to_anchor=(1, 0.8))
     plt.tight_layout()
 
-    plt.show()
+    # plt.show()
 
-    # if y_axis_value == 'Accuracy':
-    #     plt.savefig('abdnli_entropy_bin_perf_acc.pdf')
-    # elif y_axis_value == 'JSD':
-    #     plt.savefig('abdnli_entropy_bin_perf_jsd.pdf')
+    if y_axis_value == 'Accuracy':
+        plt.savefig('abdnli_entropy_bin_perf_acc.pdf')
+        # plt.savefig('nli_entropy_bin_perf_acc.pdf')
+    elif y_axis_value == 'JSD':
+        plt.savefig('abdnli_entropy_bin_perf_jsd.pdf')
+        # plt.savefig('nli_entropy_bin_perf_jsd.pdf')
 
 
 def show_abdnli_binned_plot(y_axis_value):
@@ -88,7 +90,7 @@ def show_abdnli_binned_plot(y_axis_value):
     task_name = 'uncertainty_abdnli'
     data_file = config.CHAOSNLI_ALPHANLI
     model_pred_file = config.MODEL_PRED_ABDNLI
-    column_name = 'ChaosNLI-$\\alpha$NLI'
+    column_name = 'ChaosNLI-$\\alpha$'
 
     bined_item_results = model_perf_binned(dataset_name, task_name, data_file, model_pred_file, verbose=False)
     plot_histogram(bined_item_results, y_axis_value, column_name)
@@ -115,7 +117,7 @@ def show_nli_binned_plot(y_axis_value):
 
     bin_num = 5
     split_type = 'quantile'
-    column_name = 'ChaosNLI-(S+M)NLI'
+    column_name = 'ChaosNLI-(S+M)'
 
     bined_item = build_entropy_bins(collected_data_dict, bin_num, type=split_type)
     bined_item_results = calculate_per_bin_results_simplify(bined_item, model_prediction_dict,

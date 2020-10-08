@@ -2,7 +2,7 @@
 What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?
 
 ## Paper
-[What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://www.google.com)
+[What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://arxiv.org/abs/2010.03532)
 
 ## Examples
 Chaos NLI is a dataset with 100 annotations per example (a total of 4,645 * 100 annotations) for some existing data points in the development set of [SNLI](https://nlp.stanford.edu/projects/snli/), [MNLI](https://cims.nyu.edu/~sbowman/multinli/), and [AlphaNLI](http://abductivecommonsense.xyz/).
@@ -12,7 +12,7 @@ Premise | Hypothesis | New Annotations | Old Annotations | BERT-Large Prediction
 --- | --- | --- | --- | ---
 This number represents the most reliable, albeit conservative, estimate of cases closed in 1999 by LSC grantees.|This is an actual verified number of closed cases.|E(21), N(12), C(67)|C, E, C, E, E|E(15.72%), N(14.04%), C(70.24%)
 
-### AlphaNLI Example
+### Abductive NLI Example
 Observation Start | Hypothesis 1 | Hypothesis 2 | Observation End | New Annotation | Old Annotation | BERT-Large Prediction
 --- | --- | --- | --- | --- | --- | ---
 Amy and her friends were out at 3 AM.|They started getting followed by a policeman, ran, and hid behind a building.|The decided to break into the football field. When suddenly they saw a flashlight comming towards them. They all started running for the bleachers.|They stayed there breathing hard, and praying they hadn't been seen.|1(50), 2(50)|2|1(57.53%), 2(32.47%)
@@ -21,23 +21,23 @@ Amy and her friends were out at 3 AM.|They started getting followed by a policem
 ### ChaosNLI - SNLI
 Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
 --- | --- | --- | --- | --- | --- | ---
-BERT-Large | | 09-29-2020 | 0.23 | 0.5017 | 0.7266 | 0.7384
-RoBERT-Large | | 09-29-2020 | 0.221 | 0.4937 | 0.749 | 0.7867
-XLNet-Large | | 09-29-2020 | 0.2259 | 0.5054 | 0.7431 | 0.7807	    	   	    	
+BERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.23 | 0.5017 | 0.7266 | 0.7384
+RoBERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.221 | 0.4937 | 0.749 | 0.7867
+XLNet-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2259 | 0.5054 | 0.7431 | 0.7807	    	   	    	
 
 ### ChaosNLI - MNLI
 Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
 --- | --- | --- | --- | --- | --- | ---
-BERT-Large | | 09-29-2020 | 0.3152 | 0.8449 | 0.6123 | 0.5691
-RoBERT-Large | | 09-29-2020 | 0.3112 | 0.8701 | 0.6742 | 0.6354
-XLNet-Large | | 09-29-2020 | 0.3116 | 0.8818 | 0.6742 | 0.6185     	    	    	    	
+BERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3152 | 0.8449 | 0.6123 | 0.5691
+RoBERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3112 | 0.8701 | 0.6742 | 0.6354
+XLNet-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3116 | 0.8818 | 0.6742 | 0.6185     	    	    	    	
 
-### ChaosNLI - AlphaNLI
+### ChaosNLI - Abductive NLI
 Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
 --- | --- | --- | --- | --- | --- | ---
-BERT-Large | | 09-29-2020 | 0.3055 | 3.7996 | 0.6802 | 0.6821
-RoBERT-Large | | 09-29-2020 | 0.2128 | 1.3898 | 0.8531 | 0.8368
-XLNet-Large | | 09-29-2020 | 0.2282 | 1.8166 | 0.814 | 0.8133         	    	    	     	   	    	    	
+BERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3055 | 3.7996 | 0.6802 | 0.6821
+RoBERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2128 | 1.3898 | 0.8531 | 0.8368
+XLNet-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2282 | 1.8166 | 0.814 | 0.8133         	    	    	     	   	    	    	
  
 If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file** (please follow the [instruction](https://github.com/easonnie/chaos_nli#how-can-i-evaluate-my-own-results) to build and test your prediction file).
 
@@ -112,7 +112,7 @@ The fields of the objects are self-explanatory. Please see the following sample 
         "hyp1": "She ended up falling into the river.", 
         "hyp2": "Maya slipped on some rocks and broke her back.", 
         "source": "abdnli_dev"}, 
-    "old_label": 1                                      // The old label. (AlphaNLI only have one original label for each example.)
+    "old_label": 1                                      // The old label. (Abductive NLI only have one original label for each example.)
 }
 ```
 
@@ -252,7 +252,13 @@ python src/scripts/evaluate.py \
 
 ## Citation
 ```
-
+@inproceedings{ynie2020chaosnli,
+	Author = {Yixin Nie and Xiang Zhou and Mohit Bansal},
+	Booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+	Publisher = {Association for Computational Linguistics},
+	Title = {What Can We Learn from Collective Human Opinions on Natural Language Inference Data?},
+	Year = {2020}
+}
 ```
 
 ## License

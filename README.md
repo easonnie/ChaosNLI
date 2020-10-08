@@ -5,7 +5,7 @@ What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atu
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://arxiv.org/abs/2010.03532)
 
 ## Examples
-Chaos NLI is a dataset with 100 annotations per example (a total of 4,645 * 100 annotations) for some existing data points in the development set of [SNLI](https://nlp.stanford.edu/projects/snli/), [MNLI](https://cims.nyu.edu/~sbowman/multinli/), and [AlphaNLI](http://abductivecommonsense.xyz/).
+Chaos NLI is a dataset with 100 annotations per example (a total of 4,645 * 100 annotations) for some existing data points in the development set of [SNLI](https://nlp.stanford.edu/projects/snli/), [MNLI](https://cims.nyu.edu/~sbowman/multinli/), and [Abductive NLI](http://abductivecommonsense.xyz/).
 
 ### NLI Example
 Premise | Hypothesis | New Annotations | Old Annotations | BERT-Large Prediction

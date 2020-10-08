@@ -1,6 +1,6 @@
 # Chaos NLI
 What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?  
-\[[bib](https://github.com/easonnie/ChaosNLI#citation)\] (EMNLP 2020).
+\[[bib](https://github.com/easonnie/ChaosNLI#citation)\] (EMNLP 2020)
 
 ## Paper
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://arxiv.org/abs/2010.03532)

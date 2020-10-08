@@ -23,23 +23,23 @@ Amy and her friends were out at 3 AM.|They started getting followed by a policem
 Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
 --- | --- | --- | --- | --- | --- | ---
 BERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.23 | 0.5017 | 0.7266 | 0.7384
-RoBERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.221 | 0.4937 | 0.749 | 0.7867
+RoBERTa-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.221 | 0.4937 | 0.749 | 0.7867
 XLNet-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2259 | 0.5054 | 0.7431 | 0.7807	    	   	    	
 
 ### ChaosNLI - MNLI
 Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
 --- | --- | --- | --- | --- | --- | ---
 BERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3152 | 0.8449 | 0.6123 | 0.5691
-RoBERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3112 | 0.8701 | 0.6742 | 0.6354
+RoBERTa-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3112 | 0.8701 | 0.6742 | 0.6354
 XLNet-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3116 | 0.8818 | 0.6742 | 0.6185     	    	    	    	
 
 ### ChaosNLI - Abductive NLI
 Model | Link | Date | JSD | KL | Old Accuracy | New Accuracy
 --- | --- | --- | --- | --- | --- | ---
 BERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.3055 | 3.7996 | 0.6802 | 0.6821
-RoBERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2128 | 1.3898 | 0.8531 | 0.8368
+RoBERTa-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2128 | 1.3898 | 0.8531 | 0.8368
 XLNet-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2282 | 1.8166 | 0.814 | 0.8133         	    	    	     	   	    	    	
- 
+
 If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file** (please follow the [instruction](https://github.com/easonnie/ChaosNLI#how-can-i-evaluate-my-own-results) to build and test your prediction file).
 
 ## Data and Format

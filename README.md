@@ -1,5 +1,6 @@
 # Chaos NLI
-What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?
+What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?  
+\[[bib](https://github.com/easonnie/ChaosNLI#citation)\] (EMNLP 2020).
 
 ## Paper
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://arxiv.org/abs/2010.03532)
@@ -39,7 +40,7 @@ BERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 |
 RoBERT-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2128 | 1.3898 | 0.8531 | 0.8368
 XLNet-Large | [Nie et al., 2020](https://arxiv.org/abs/2010.03532) | 09-29-2020 | 0.2282 | 1.8166 | 0.814 | 0.8133         	    	    	     	   	    	    	
  
-If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file** (please follow the [instruction](https://github.com/easonnie/chaos_nli#how-can-i-evaluate-my-own-results) to build and test your prediction file).
+If you want your results to be showed on the Scoreboard, please email us (<yixin1@cs.unc.edu> or <nyixin318@gmail.com>) with **the name of the entry**, **a link to your method**, and **your model prediction file** (please follow the [instruction](https://github.com/easonnie/ChaosNLI#how-can-i-evaluate-my-own-results) to build and test your prediction file).
 
 ## Data and Format
 ### Where can I download the data？
@@ -222,7 +223,7 @@ distilbert          	0.3133    	0.6652    	0.5472    	0.5103
 ------------------------------------------------------------
 ```
 
-To examine **the factor of human agreement on model performance**, check out this informative [jupyter-notebook](https://github.com/easonnie/chaos_nli/blob/master/src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. 
+To examine **the factor of human agreement on model performance**, check out this informative [jupyter-notebook](https://github.com/easonnie/ChaosNLI/blob/master/src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. 
 
 ## Evaluate
 ### How can I evaluate my own results?

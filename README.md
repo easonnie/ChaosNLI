@@ -5,6 +5,11 @@ What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atu
 ## Paper
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://arxiv.org/abs/2010.03532)
 
+## Motivation
+Most NLU evaluations have focused on using the majority label with presumably high agreement as the ground truth. Less attention has been paid to the distribution of human opinions.  
+We believe that we should consider take a step back when looking at collective human opinions on NLP tasks.  
+![everything is an opinion](../img/opinion.jpg)
+
 ## Examples
 Chaos NLI is a dataset with 100 annotations per example (a total of 4,645 * 100 annotations) for some existing data points in the development set of [SNLI](https://nlp.stanford.edu/projects/snli/), [MNLI](https://cims.nyu.edu/~sbowman/multinli/), and [Abductive NLI](http://abductivecommonsense.xyz/).
 

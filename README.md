@@ -7,7 +7,7 @@ What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atu
 
 ## Motivation
 Most NLU evaluations have focused on using the majority label with presumably high agreement as the ground truth. Less attention has been paid to the distribution of human opinions.  
-We believe that we should consider take a step back when looking at collective human opinions on NLP tasks.  
+We believe that we should consider to take a step back and look at collective human opinions on NLP tasks.  
 ![everything is an opinion](../img/opinion.jpg)
 
 ## Examples

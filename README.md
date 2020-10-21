@@ -25,6 +25,8 @@ This number represents the most reliable, albeit conservative, estimate of cases
 ### Abductive NLI Example
 Observation Start | Hypothesis 1 | Hypothesis 2 | Observation End | New Annotation | Old Annotation | BERT-Large Prediction
 --- | --- | --- | --- | --- | --- | ---
+Ruth was playing video games.|Ruth started playing a new game.|Ruth challenged her friend to a game of golf.|She won the game easily.|1(58), 2(42)|1|1(99.99%), 2(0.01%)
+Gina entered her classroom and went to her desk.|Tami had asked Gina not to talk with the gossip girls.|She started talking to some friends, but a bully named Tami butted in.|The fact that Tami was still talking to them made Gina uncomfortable.|1(50), 2(50)|2|1(0.01%), 2(99.99%)
 Amy and her friends were out at 3 AM.|They started getting followed by a policeman, ran, and hid behind a building.|The decided to break into the football field. When suddenly they saw a flashlight comming towards them. They all started running for the bleachers.|They stayed there breathing hard, and praying they hadn't been seen.|1(50), 2(50)|2|1(57.53%), 2(32.47%)
 
 ## Scoreboard

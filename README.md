@@ -12,9 +12,9 @@ We believe that we should consider to take a step back and look at **collective 
 ![everything is an opinion](https://github.com/easonnie/ChaosNLI/blob/master/img/opinion.jpg)
 
 ## Examples
-**Chaos NLI** is a dataset with 100 annotations per example (a total of 4,645 * 100 annotations) for some existing data points in the development set of [SNLI](https://nlp.stanford.edu/projects/snli/), [MNLI](https://cims.nyu.edu/~sbowman/multinli/), and [Abductive NLI](http://abductivecommonsense.xyz/).
+**Chaos NLI** is a dataset with 100 annotations per example (a total of 4,645 * 100 annotations) for some existing data points in the development set of [SNLI](https://nlp.stanford.edu/projects/snli/), [MNLI](https://cims.nyu.edu/~sbowman/multinli/), and [Abductive NLI](http://abductivecommonsense.xyz/).  
 Common practice for model evaluation, use the majority labels in the original dataset as the one gold labels and calculate model accuracy based on that.  
-A more fine-grained evaluation should consider comparing **model distribution outputs** with the **human label distributions**.
+A more fine-grained evaluation should consider comparing **model distribution outputs** with the **human label distributions**.  
 
 ### NLI Example
 Premise | Hypothesis | New Annotations | Old Annotations | BERT-Large Prediction

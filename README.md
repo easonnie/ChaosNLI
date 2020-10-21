@@ -2,6 +2,29 @@
 What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?  
 \[[bib](https://github.com/easonnie/ChaosNLI#citation)\] (EMNLP 2020)
 
+**Outline**
+* [Paper](#paper)
+* [Motivation](#motivation)
+* [Examples](#examples)
+    * [NLI Examples](#nli-example)
+    * [Abductive NLI Examples](#abductive-nli-example)
+* [Scoreboard](#scoreboard)
+    * [ChaosNLI - SNLI](#chaosnli---snli)
+    * [ChaosNLI - MNLI](#chaosnli---mnli)
+    * [ChaosNLI - Abductive NLI](#chaosnli---abductive-nli)
+* [Data and Format](#data-and-format)
+    * [Where can I download the data](#where-can-i-download-the-data)
+    * [What is the format?](#what-is-the-format)
+        * [Data Format](#data-format)
+        * [Model Prediction Format](#model-prediction-format)
+* [Results](#results)
+    * [How to reproduce the results on the paper?](#how-to-reproduce-the-results-on-the-paper)
+* [Evaluate](#evaluate)
+    * [How can I evaluate my own results?](#how-can-i-evaluate-my-own-results)
+* [Citation](#citation)
+* [License](#license)
+
+
 ## Paper
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://arxiv.org/abs/2010.03532)
 

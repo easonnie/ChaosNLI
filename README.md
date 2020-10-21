@@ -17,12 +17,16 @@ Common practice for model evaluation, use the majority labels in the original da
 A more fine-grained evaluation should consider comparing **model distribution outputs** with the **human label distributions**.  
 
 ### NLI Example
+Is the hypothesis entailed or contradicted (or neither) by the premise?  
+
 Premise | Hypothesis | New Annotations | Old Annotations | BERT-Large Prediction
 --- | --- | --- | --- | ---
 There are a number of expensive jewelry and other duty-free shops, all with goods priced in US dollars (duty-free goods must always be paid for in foreign currency).|You can pay using the US dollar when buying goods from the duty-free shops.|E(51), N(3), C(46)|C, C, E, N, C|E(50.03%), N(5.33%), C(44.63%)
 This number represents the most reliable, albeit conservative, estimate of cases closed in 1999 by LSC grantees.|This is an actual verified number of closed cases.|E(21), N(12), C(67)|C, E, C, E, E|E(15.72%), N(14.04%), C(70.24%)
 
 ### Abductive NLI Example
+Which of the two hypotheses is more likely to cause Observation-Beginning to turn into Observation-Ending?  
+
 Observation Start | Hypothesis 1 | Hypothesis 2 | Observation End | New Annotation | Old Annotation | BERT-Large Prediction
 --- | --- | --- | --- | --- | --- | ---
 Ruth was playing video games.|Ruth started playing a new game.|Ruth challenged her friend to a game of golf.|She won the game easily.|1(58), 2(42)|1|1(99.99%), 2(0.01%)

@@ -1,32 +1,42 @@
 # Chaos NLI
-What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?  
-\[[bib](https://github.com/easonnie/ChaosNLI#citation)\] (EMNLP 2020)
+What Can We Learn from **C**ollective **H**um**A**n **O**pinion**S** on **N**atural **L**anguage **I**nference Data (**ChaosNLI**)?
+
+[Yixin Nie](https://easonnie.github.io/), [Xiang Zhou](https://owenzx.github.io/), [Mohit Bansal](https://www.cs.unc.edu/~mbansal/), EMNLP 2020 \[[bib](https://github.com/easonnie/ChaosNLI#citation)\]
+
+Distributed NLI: Learning to Predict Human Opinion Distributions for Language Reasoning
+
+[Xiang Zhou](https://owenzx.github.io/)\*, [Yixin Nie](https://easonnie.github.io/)\*, [Mohit Bansal](https://www.cs.unc.edu/~mbansal/), Findings of ACL 2022 [[bib](https://github.com/easonnie/ChaosNLI#citation)\] 
 
 **Outline**
-* [Paper](#paper)
-* [Motivation](#motivation)
-* [Examples](#examples)
-    * [NLI Examples](#nli-example)
-    * [Abductive NLI Examples](#abductive-nli-example)
-* [Scoreboard](#scoreboard)
-    * [ChaosNLI - SNLI](#chaosnli---snli)
-    * [ChaosNLI - MNLI](#chaosnli---mnli)
-    * [ChaosNLI - Abductive NLI](#chaosnli---abductive-nli)
-* [Data and Format](#data-and-format)
-    * [Where can I download the data](#where-can-i-download-the-data)
-    * [What is the format?](#what-is-the-format)
-        * [Data Format](#data-format)
-        * [Model Prediction Format](#model-prediction-format)
-* [Results](#results)
-    * [How to reproduce the results on the paper?](#how-to-reproduce-the-results-on-the-paper)
-* [Evaluate](#evaluate)
-    * [How can I evaluate my own results?](#how-can-i-evaluate-my-own-results)
-* [Citation](#citation)
-* [License](#license)
+
+- [Chaos NLI](#chaos-nli)
+  - [Papers](#papers)
+  - [Motivation](#motivation)
+  - [Examples](#examples)
+    - [NLI Example](#nli-example)
+    - [Abductive NLI Example](#abductive-nli-example)
+  - [Scoreboard](#scoreboard)
+    - [ChaosNLI - SNLI](#chaosnli---snli)
+    - [ChaosNLI - MNLI](#chaosnli---mnli)
+    - [ChaosNLI - Abductive NLI](#chaosnli---abductive-nli)
+  - [Data and Format](#data-and-format)
+    - [Where can I download the data？](#where-can-i-download-the-data)
+    - [What is the format?](#what-is-the-format)
+      - [Data Format](#data-format)
+      - [Model Prediction Format](#model-prediction-format)
+  - [Results](#results)
+    - [How to reproduce the results on the paper?](#how-to-reproduce-the-results-on-the-paper)
+    - [Improving Distribution Estimation](#improving-distribution-estimation)
+  - [Evaluate](#evaluate)
+    - [How can I evaluate my own results?](#how-can-i-evaluate-my-own-results)
+  - [Citation](#citation)
+  - [License](#license)
 
 
-## Paper
+## Papers
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://arxiv.org/abs/2010.03532)
+
+[Distributed NLI: Learning to Predict Human Opinion Distributions for Language Reasoning](https://arxiv.org/abs/2104.08676)
 
 ## Motivation
 Most NLU evaluations have focused on using the **majority label** with presumably high agreement as the ground truth. Less attention has been paid to the **distribution of human opinions**.  
@@ -263,6 +273,9 @@ distilbert          	0.3133    	0.6652    	0.5472    	0.5103
 
 To examine **the factor of human agreement on model performance**, check out this informative [jupyter-notebook](https://github.com/easonnie/ChaosNLI/blob/master/src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. 
 
+### Improving Distribution Estimation
+In the [distnli](https://github.com/easonnie/ChaosNLI/tree/master/distnli) folder, we provide implementation of several methods (e.g. Monte Carlo Dropout, Deep Ensemble, Re-Calibration, etc.) used in the Distributed NLI paper that can improve the distribution estimation performance upon the vanilla BERT-style baseline. Please see the README under that folder for detailed instructions.
+
 ## Evaluate
 ### How can I evaluate my own results?
 Build your prediction file according to the sample file in `data/prediction_samples`.  
@@ -290,6 +303,9 @@ python src/scripts/evaluate.py \
 ```
 
 ## Citation
+
+**What Can We Learn from Collective Human Opinions on Natural Language Inference Data?**
+
 ```
 @inproceedings{ynie2020chaosnli,
 	Author = {Yixin Nie and Xiang Zhou and Mohit Bansal},
@@ -300,5 +316,18 @@ python src/scripts/evaluate.py \
 }
 ```
 
+**Distributed NLI: Learning to Predict Human Opinion Distributions for Language Reasoning**
+
+```
+@inproceedings{xzhou2022distnli,
+	Author = {Xiang Zhou and Yixin Nie and Mohit Bansal},
+	Booktitle = {Findings of the Association for Computational Linguistics: ACL 2022},
+	Publisher = {Association for Computational Linguistics},
+	Title = {Distributed NLI: Learning to Predict Human Opinion Distributions for Language Reasoning},
+	Year = {2022}
+}
+```
+
 ## License
+
 **Chaos NLI** is licensed under Creative Commons-Non Commercial 4.0. See the LICENSE file for details.

@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+.uv-cache/
+.ipynb_checkpoints/
+.DS_Store
+*_entropy_bin_perf_*.pdf
+data/chaosNLI_v1.0/
+data/model_predictions/
+distnli/data/chaosNLI_v1.0/

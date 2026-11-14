@@ -1,61 +1,28 @@
-import json
+"""Convert raw prediction JSONL to the ChaosNLI evaluation format."""
+
+import argparse
+from pathlib import Path
 import sys
 
-nli_idx2label={0:'entailment',
-               1:'neutral',
-               2:'contradiction'}
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from eval_scripts.prediction_io import TASK_SIZES, infer_task, read_rows, standardized_row, write_prediction_dict
 
 
-def read_jsonl(path):
-    result = []
-    with open(path, 'r') as fr:
-        for line in fr.readlines():
-            result.append(json.loads(line))
-    return result
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('prediction_file', type=Path)
+    parser.add_argument('output_file', type=Path)
+    parser.add_argument('--task_name', choices=tuple(TASK_SIZES))
+    parser.add_argument('--model_name', default='roberta-large')
+    args = parser.parse_args()
+    try:
+        rows = read_rows(args.prediction_file)
+        task_name = infer_task(rows, args.task_name)
+        predictions = {row['uid']: standardized_row(row, task_name) for row in rows}
+        write_prediction_dict(args.output_file, {args.model_name: predictions})
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        parser.exit(1, 'Conversion failed: {}\n'.format(error))
 
 
-def write_jsonl(path, dict_lst):
-    with open(path, 'w') as fw:
-        for d in dict_lst:
-            json.dump(d, fw)
-            fw.write('\n')
-
-
-
-
-
-assert(len(sys.argv) == 3)
-inp_path = sys.argv[1]
-out_path = sys.argv[2]
-
-
-if 'alpha' in inp_path:
-    pred_type = 'alphanli'
-elif 'nli' in inp_path:
-    pred_type = 'nli'
-else:
-    raise NotImplementedError
-
-
-if pred_type == 'nli':
-    jsonl_preds = read_jsonl(inp_path)
-    pred_dict = {}
-    pred_dict['roberta-large'] = {}
-    for pred in jsonl_preds:
-        uid = pred['uid']
-        pred['predicted_label'] = nli_idx2label[pred['predicted_label']]
-        pred_dict['roberta-large'][uid] = pred
-    write_jsonl(out_path, [pred_dict])
-
-elif pred_type == 'alphanli':
-    jsonl_preds = read_jsonl(inp_path)
-    pred_dict = {}
-    pred_dict['roberta-large'] = {}
-    for pred in jsonl_preds:
-        uid = pred['uid']
-        pred['predicted_label'] += 1
-        pred_dict['roberta-large'][uid] = pred
-    write_jsonl(out_path, [pred_dict])
-
-else:
-    raise NotImplementedError
+if __name__ == '__main__':
+    main()

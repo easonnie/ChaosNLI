@@ -1,131 +1,93 @@
-import torch
+"""Fit a positive calibration temperature on CPU, then scale prediction logits."""
+
+import argparse
+from pathlib import Path
 import sys
+
 import numpy as np
-import json
-from torch.nn import functional as F
-import numpy as np
+from scipy.optimize import minimize_scalar
+from scipy.special import log_softmax
 
-HARD_LABEL=False
-
-
-
-
-def read_jsonl(path):
-    result = []
-    with open(path, 'r') as fr:
-        for line in fr.readlines():
-            result.append(json.loads(line))
-    return result
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from evaluation.tools import _prediction_distribution, _vector
+from eval_scripts.prediction_io import (
+    infer_task, predicted_label, read_prediction_dict, read_rows, write_prediction_dict,
+)
 
 
-def write_jsonl(path, dict_lst):
-    with open(path, 'w') as fw:
-        for d in dict_lst:
-            json.dump(d, fw)
-            fw.write('\n')
+def prediction_logits(prediction):
+    if 'predicted_probabilities' in prediction:
+        # The evaluator also prefers probabilities when both fields are present.
+        return np.log(_prediction_distribution(prediction))
+    return _vector(prediction['logits'], 'logits')
 
 
+def fit_temperature(logits, labels):
+    logits = np.asarray(logits, dtype=float)
+    labels = np.asarray(labels, dtype=float)
+    if (logits.ndim != 2 or logits.shape != labels.shape or not len(logits)
+            or not np.all(np.isfinite(logits)) or not np.all(np.isfinite(labels))
+            or np.any(labels < 0) or not np.allclose(labels.sum(axis=1), 1)):
+        raise ValueError('Calibration requires finite, aligned logits and normalized label distributions')
+    # Optimizing log(T) guarantees T > 0. Cross-entropy and KL have the same optimum.
+    def objective(log_temperature):
+        with np.errstate(over='ignore', invalid='ignore'):
+            scaled = logits / np.exp(log_temperature)
+            value = -np.sum(labels * log_softmax(scaled, axis=1)) / len(labels)
+        return float(value) if np.isfinite(value) else float('inf')
+
+    result = minimize_scalar(objective, bounds=(-np.log(1000), np.log(1000)), method='bounded')
+    if not result.success or not np.isfinite(result.fun):
+        raise ValueError('Temperature optimization failed')
+    # Keep the uncalibrated model if it already minimizes the objective.
+    return float(np.exp(result.x)) if result.fun < objective(0.0) else 1.0
 
 
-
-def T_scaling(logits, args):
-  temperature = args.get('temperature', None)
-  return torch.div(logits, temperature)
-
-def T_scaling_lst(logits, temperature):
-    if type(logits) is list:
-        logits = np.asarray(logits)
-
-    logits =logits / temperature
-    return logits.tolist()
-
-
-label_tag_to_id = {1:0,
-                   2:1,
-                   'e':0,
-                   'n':1,
-                   'c':2}
-
-
-
-logits_list = []
-labels_list = []
-temps = []
-losses = []
-
-# read logits and labels
-assert(len(sys.argv) in [4,5])
-inp_path = sys.argv[1]
-label_path = sys.argv[2]
-
-out_path = sys.argv[3]
-if len(sys.argv) == 5:
-    final_temp = float(sys.argv[4])
-    inp_dict = read_jsonl(inp_path)
-else:
+def calibrate(predictions, label_file, model_name=None, temperature=None):
+    if model_name is None:
+        if len(predictions) != 1:
+            raise ValueError('Use --model_name when the input contains multiple models')
+        model_name = next(iter(predictions))
+    if model_name not in predictions:
+        raise ValueError('Unknown model: ' + model_name)
+    rows = predictions[model_name]
+    task_name = infer_task(list(rows.values()))
+    if temperature is None:
+        labels = read_rows(label_file)
+        missing = [label['uid'] for label in labels if label['uid'] not in rows]
+        if missing:
+            raise ValueError('Calibration predictions missing for UID ' + str(missing[0]))
+        logits = [prediction_logits(rows[label['uid']]) for label in labels]
+        temperature = fit_temperature(logits, [label['label_dist'] for label in labels])
+    if not np.isfinite(temperature) or temperature <= 0:
+        raise ValueError('Temperature must be finite and positive')
+    for uid, row in rows.items():
+        with np.errstate(over='ignore', invalid='ignore'):
+            logits = prediction_logits(row) / temperature
+        if not np.all(np.isfinite(logits)):
+            raise ValueError('Scaled logits are not finite for UID ' + str(uid))
+        row['logits'] = logits.tolist()
+        row.pop('predicted_probabilities', None)
+        row['predicted_label'] = predicted_label(logits, task_name)
+    return temperature
 
 
-    inp_dict = read_jsonl(inp_path)
-    label_dict = read_jsonl(label_path)
-    for label_info in label_dict:
-        uid = label_info['uid']
-        if 'logits' in inp_dict[0]['roberta-large'][uid]:
-            logits = inp_dict[0]['roberta-large'][uid]['logits']
-        else:
-            probs = inp_dict[0]['roberta-large'][uid]['predicted_probabilities']
-            logits = np.log(probs).tolist()
-            inp_dict[0]['roberta-large'][uid]['logits'] = logits
-            del inp_dict[0]['roberta-large'][uid]['predicted_probabilities']
-        label_dist = label_info['label_dist']
-        if HARD_LABEL:
-            if 'majority_label' in label_info:
-                hard_label_idx = label_tag_to_id[label_info['majority_label']]
-            else:
-                hard_label_idx = np.argmax(label_dist)
-            label_dist = np.zeros(len(label_dist))
-            label_dist[hard_label_idx] = 1
-            label_dist = label_dist.tolist()
-        logits_list.append(torch.FloatTensor(logits))
-        labels_list.append(torch.FloatTensor(label_dist))
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('prediction_file', type=Path)
+    parser.add_argument('label_file', type=Path)
+    parser.add_argument('output_file', type=Path)
+    parser.add_argument('temperature', nargs='?', type=float)
+    parser.add_argument('--model_name')
+    args = parser.parse_args()
+    try:
+        predictions = read_prediction_dict(args.prediction_file)
+        temperature = calibrate(predictions, args.label_file, args.model_name, args.temperature)
+        write_prediction_dict(args.output_file, predictions)
+        print(temperature)
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        parser.exit(1, 'Calibration failed: {}\n'.format(error))
 
 
-
-
-    # calibration
-    temperature = torch.nn.Parameter(torch.ones(1).cuda())
-    args = {'temperature': temperature}
-    criterion = torch.nn.KLDivLoss(reduction='batchmean')
-
-
-    optimizer = torch.optim.LBFGS([temperature], lr=0.001, max_iter=10000, line_search_fn='strong_wolfe')
-
-    # Create tensors
-    logits_list = torch.stack(logits_list,0).cuda()
-    labels_list = torch.stack(labels_list,0).cuda()
-
-    def _eval():
-      loss = criterion(F.log_softmax(T_scaling(logits_list, args), -1), labels_list)
-      loss.backward()
-      temps.append(temperature.item())
-      losses.append(loss)
-      return loss
-
-
-    optimizer.step(_eval)
-
-
-    final_temp = temperature.item()
-print(final_temp)
-
-for uid in inp_dict[0]['roberta-large'].keys():
-    if 'logits' not in inp_dict[0]['roberta-large'][uid]:
-        probs = inp_dict[0]['roberta-large'][uid]['predicted_probabilities']
-        logits = np.log(probs).tolist()
-        inp_dict[0]['roberta-large'][uid]['logits'] = logits
-        del inp_dict[0]['roberta-large'][uid]['predicted_probabilities']
-
-    inp_dict[0]['roberta-large'][uid]['logits'] = T_scaling_lst(inp_dict[0]['roberta-large'][uid]['logits'], final_temp)
-
-write_jsonl(out_path, inp_dict)
-
-
+if __name__ == '__main__':
+    main()

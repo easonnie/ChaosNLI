@@ -1,3 +1,8 @@
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from evaluation.tools import calculate_divergence_bwt_model_human_simplify
 from utils import common, list_dict_data_tool
 import config
@@ -10,6 +15,8 @@ def format_number(num, digits=4):
 def model_perf(dataset_name, task_name, data_file, model_prediction_file):
     d_list = common.load_jsonl(data_file)
     collected_data_dict = list_dict_data_tool.list_to_dict(d_list, key_fields='uid')
+    if len(collected_data_dict) != len(d_list):
+        raise ValueError('Duplicate UIDs in the evaluation dataset')
     model_prediction_dict = common.load_json(model_prediction_file)
     results_dict, all_correct_set = calculate_divergence_bwt_model_human_simplify(collected_data_dict,
                                                                                   model_prediction_dict, task_name)
@@ -56,6 +63,16 @@ def model_perf_abdnli():
 
 
 if __name__ == '__main__':
+    required_files = [config.CHAOSNLI_SNLI, config.CHAOSNLI_MNLI, config.CHAOSNLI_ALPHANLI,
+                      config.MODEL_PRED_NLI, config.MODEL_PRED_ABDNLI]
+    missing = [str(path) for path in required_files if not path.is_file()]
+    if missing:
+        raise SystemExit(
+            "Missing files:\n" + "\n".join(missing) +
+            "\nDownload the ChaosNLI dataset from Hugging Face. Reproducing the model tables "
+            "also requires the historical model prediction files, which are not in that mirror. "
+            "See README.md; use the evaluate.py command to evaluate your own predictions."
+        )
     model_perf_abdnli()
     model_perf_snli()
     model_perf_mnli()

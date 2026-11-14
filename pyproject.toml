@@ -1,0 +1,17 @@
+[project]
+name = "chaosnli-evaluation"
+version = "0.1.0"
+description = "Dataset download, evaluation, and prediction postprocessing for ChaosNLI"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "scipy",
+    "seaborn",
+    "tqdm",
+]
+
+[tool.uv]
+package = false

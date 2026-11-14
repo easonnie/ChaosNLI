@@ -1,4 +1,8 @@
 import argparse
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from evaluation.model_pref import model_perf, model_perf_unli
 
@@ -8,6 +12,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--task_name",
         type=str,
+        choices=("uncertainty_nli", "uncertainty_abdnli", "unli"),
         help="Task Name: (uncertainty_nli / uncertainty_abdnli / unli).",
         required=True
     )
@@ -38,7 +43,10 @@ if __name__ == '__main__':
     task_name = args.task_name
     data_file = args.data_file
     model_prediction_file = args.prediction_file
-    if dataset_name == 'unli':
-        model_perf_unli(dataset_name, task_name, data_file, model_prediction_file)
-    else:
-        model_perf(dataset_name, task_name, data_file, model_prediction_file)
+    try:
+        if task_name == 'unli':
+            model_perf_unli(dataset_name, task_name, data_file, model_prediction_file)
+        else:
+            model_perf(dataset_name, task_name, data_file, model_prediction_file)
+    except (OSError, ValueError, KeyError) as error:
+        parser.exit(1, "Evaluation failed: {}\n".format(error))

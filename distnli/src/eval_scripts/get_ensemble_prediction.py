@@ -1,97 +1,61 @@
-import json
+"""Average model probabilities and derive labels from the ensemble distribution."""
+
+import argparse
+from pathlib import Path
 import sys
-import os
+
 import numpy as np
 
-nli_idx2label={0:'entailment',
-               1:'neutral',
-               2:'contradiction'}
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from evaluation.tools import _prediction_distribution
+from eval_scripts.prediction_io import TASK_SIZES, infer_task, predicted_label, read_rows, write_prediction_dict
 
 
-def read_jsonl(path):
-    result = []
-    with open(path, 'r') as fr:
-        for line in fr.readlines():
-            result.append(json.loads(line))
-    return result
+def ensemble_predictions(input_dir, task_name=None):
+    paths = sorted(Path(input_dir).glob('*.jsonl'))
+    if not paths:
+        raise ValueError('No prediction JSONL files found in ' + str(input_dir))
+    accumulated = {}
+    expected_uids = None
+    for path in paths:
+        rows = read_rows(path)
+        current_task = infer_task(rows, task_name)
+        if task_name is None:
+            task_name = current_task
+        uids = {row['uid'] for row in rows}
+        if expected_uids is None:
+            expected_uids = uids
+        elif uids != expected_uids:
+            raise ValueError('Ensemble members must contain identical UID sets: ' + str(path))
+        for row in rows:
+            uid = row['uid']
+            probabilities = _prediction_distribution(row, TASK_SIZES[task_name])
+            accumulated[uid] = accumulated.get(uid, np.zeros_like(probabilities)) + probabilities
+    results = {}
+    for uid, total in accumulated.items():
+        probabilities = total / len(paths)
+        results[uid] = {
+            'uid': uid, 'predicted_probabilities': probabilities.tolist(),
+            'predicted_label': predicted_label(probabilities, task_name),
+        }
+    return results
 
 
-def write_jsonl(path, dict_lst):
-    with open(path, 'w') as fw:
-        for d in dict_lst:
-            json.dump(d, fw)
-            fw.write('\n')
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('input_dir', type=Path)
+    parser.add_argument('output_file', type=Path)
+    parser.add_argument('--task_name', choices=tuple(TASK_SIZES))
+    parser.add_argument('--model_name', default='roberta-large')
+    args = parser.parse_args()
+    try:
+        if args.output_file.resolve().parent == args.input_dir.resolve() and args.output_file.suffix == '.jsonl':
+            raise ValueError('Write the ensemble output outside the member JSONL directory')
+        predictions = ensemble_predictions(args.input_dir, args.task_name)
+        write_prediction_dict(args.output_file, {args.model_name: predictions})
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        parser.exit(1, 'Ensemble failed: {}\n'.format(error))
 
 
-def softmax(logits):
-    if type(logits) is list:
-        logits = np.asarray(logits)
-    prob = np.exp(logits) / np.sum(np.exp(logits))
-    # normalize
-    prob = prob / np.sum(prob)
-    assert np.isclose(np.sum(prob), 1)
-    return prob
-
-
-
-assert(len(sys.argv) == 3)
-# assume each file under that folder is a valid model
-inp_folder = sys.argv[1]
-out_path = sys.argv[2]
-
-
-if 'alpha' in inp_folder:
-    pred_type = 'alphanli'
-elif 'nli' in inp_folder:
-    pred_type = 'nli'
-else:
-    raise NotImplementedError
-
-model_count = 0
-pred_dict = {}
-pred_dict['roberta-large'] = {}
-for filename in os.listdir(inp_folder):
-    if filename.endswith(".jsonl"):
-        print(filename)
-        inp_path = os.path.join(inp_folder, filename)
-        model_count += 1
-
-
-        if pred_type == 'nli':
-            jsonl_preds = read_jsonl(inp_path)
-            for pred in jsonl_preds:
-                uid = pred['uid']
-                pred['predicted_label'] = nli_idx2label[pred['predicted_label']]
-                if uid not in pred_dict['roberta-large']:
-                    pred_dict['roberta-large'][uid] = pred
-                if 'accumulated_probabilities' not in pred_dict['roberta-large'][uid]:
-                    pred_dict['roberta-large'][uid]['accumulated_probabilities'] = softmax(pred['logits'])
-                else:
-                    pred_dict['roberta-large'][uid]['accumulated_probabilities'] = pred_dict['roberta-large'][uid]['accumulated_probabilities'] + softmax(pred['logits'])
-                pred_dict['roberta-large'][uid].pop('logits', None)
-
-        elif pred_type == 'alphanli':
-            jsonl_preds = read_jsonl(inp_path)
-            for pred in jsonl_preds:
-                uid = pred['uid']
-                pred['predicted_label'] += 1
-                if uid not in pred_dict['roberta-large']:
-                    pred_dict['roberta-large'][uid] = pred
-                if 'accumulated_probabilities' not in pred_dict['roberta-large'][uid]:
-                    pred_dict['roberta-large'][uid]['accumulated_probabilities'] = softmax(pred['logits'])
-                else:
-                    pred_dict['roberta-large'][uid]['accumulated_probabilities'] = pred_dict['roberta-large'][uid]['accumulated_probabilities'] + softmax(pred['logits'])
-                pred_dict['roberta-large'][uid].pop('logits', None)
-
-
-
-
-        else:
-            raise NotImplementedError
-
-for uid in pred_dict['roberta-large'].keys():
-    pred_dict['roberta-large'][uid]['predicted_probabilities'] = (pred_dict['roberta-large'][uid]['accumulated_probabilities'] / model_count).tolist()
-    pred_dict['roberta-large'][uid].pop('accumulated_probabilities', None)
-
-
-write_jsonl(out_path, [pred_dict])
+if __name__ == '__main__':
+    main()

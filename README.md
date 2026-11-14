@@ -10,6 +10,7 @@ Distributed NLI: Learning to Predict Human Opinion Distributions for Language Re
 **Outline**
 
 - [Chaos NLI](#chaos-nli)
+  - [Quick start](#quick-start)
   - [Papers](#papers)
   - [Motivation](#motivation)
   - [Examples](#examples)
@@ -29,9 +30,29 @@ Distributed NLI: Learning to Predict Human Opinion Distributions for Language Re
     - [Improving Distribution Estimation](#improving-distribution-estimation)
   - [Evaluate](#evaluate)
     - [How can I evaluate my own results?](#how-can-i-evaluate-my-own-results)
+  - [Development and verification](#development-and-verification)
   - [Citation](#citation)
   - [License](#license)
 
+
+## Quick start
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then run these commands from the repository root:
+
+```bash
+uv sync --locked
+uv run --locked python scripts/download_data.py
+uv run --locked python src/scripts/evaluate.py \
+    --task_name uncertainty_nli \
+    --data_file data/chaosNLI_v1.0/chaosNLI_snli.jsonl \
+    --prediction_file data/prediction_samples/snli_random_baseline.json
+```
+
+The uv project manages Python 3.12 and the CPU dependencies for dataset evaluation, plotting, and prediction postprocessing. `uv sync --locked` creates `.venv` and installs the versions in `uv.lock`; `uv run --locked` uses that environment without manual activation. The example above evaluates the checked-in random baseline. Replace the prediction file with your own results to evaluate a model.
+
+The original training and model inference code in `distnli/` uses a separate legacy PyTorch/Transformers environment; see its [README](distnli/README.md). Those dependencies are not part of the root uv project.
+
+For a pip-only setup, use Python 3.12 in a separate virtual environment and install `requirements.txt`. That file is exported from `uv.lock`, rather than maintained independently.
 
 ## Papers
 [What Can We Learn from Collective Human Opinions on Natural Language Inference Data?](https://arxiv.org/abs/2010.03532)
@@ -64,7 +85,9 @@ Observation Start | Hypothesis 1 | Hypothesis 2 | Observation End | New Annotati
 --- | --- | --- | --- | --- | --- | ---
 Ruth was playing video games.|Ruth started playing a new game.|Ruth challenged her friend to a game of golf.|She won the game easily.|1(58), 2(42)|1|1(99.99%), 2(0.01%)
 Gina entered her classroom and went to her desk.|Tami had asked Gina not to talk with the gossip girls.|She started talking to some friends, but a bully named Tami butted in.|The fact that Tami was still talking to them made Gina uncomfortable.|1(50), 2(50)|2|1(0.01%), 2(99.99%)
-Amy and her friends were out at 3 AM.|They started getting followed by a policeman, ran, and hid behind a building.|The decided to break into the football field. When suddenly they saw a flashlight comming towards them. They all started running for the bleachers.|They stayed there breathing hard, and praying they hadn't been seen.|1(50), 2(50)|2|1(57.53%), 2(32.47%)
+Amy and her friends were out at 3 AM.|They started getting followed by a policeman, ran, and hid behind a building.|The decided to break into the football field. When suddenly they saw a flashlight comming towards them. They all started running for the bleachers.|They stayed there breathing hard, and praying they hadn't been seen.|1(50), 2(50)|2|Unavailable
+
+The model probabilities for the third example are omitted because the original values sum to 90%.
 
 ## Scoreboard
 ### ChaosNLI - SNLI
@@ -92,18 +115,16 @@ If you want your results to be showed on the Scoreboard, please email us (<yixin
 
 ## Data and Format
 ### Where can I download the data？
-**ChaosNLI** is available at https://www.dropbox.com/s/h4j7dqszmpt2679/chaosNLI_v1.0.zip.  
+The original ChaosNLI Dropbox download is no longer available. Download the data from the [ChaosNLI community mirror on Hugging Face](https://huggingface.co/datasets/earino/chaosnli) instead. The mirror preserves the original JSONL format, including example IDs, label counts, and label distributions. It contains all three components: SNLI (1,514 examples), MNLI matched (1,599 examples), and alphaNLI (1,532 examples).
 
-Alternatively, you can download the data with the following script:
+Run the following command from the root of this repository. It downloads the original files directly from Hugging Face into the paths expected by the evaluation scripts, using only the Python standard library. The revision is pinned for reproducibility, and every file is verified against its SHA-256 checksum. Existing valid files are reused; a failed download exits with an error.
+
 ```bash
-# make sure you are at the root of chaos_nli directory
-source setup.sh     # setup path
-bash scripts/download_data.sh
+uv run --locked python scripts/download_data.py
 ```
-The script will not only download the ChaosNLI data and but also the predictions of model in the `chaos_nli/data`.  
 
-If you want to use the scripts in this repository to reproduce the results, please make sure the data is downloaded in the correct path.  
-The repository structure should be something like:
+The downloader also works independently with `python3 scripts/download_data.py` or `bash scripts/download_data.sh`, using only the Python standard library. To choose another destination, pass `--output-dir /path/to/chaosNLI_v1.0`. The default destination is this repository's `data/chaosNLI_v1.0/`, even when the script is called from another working directory. The resulting data layout is:
+
 ```
 ├── LICENSE
 ├── README.md
@@ -113,14 +134,19 @@ The repository structure should be something like:
 │   │   ├── chaosNLI_alphanli.jsonl
 │   │   ├── chaosNLI_mnli_m.jsonl
 │   │   └── chaosNLI_snli.jsonl
-│   └── model_predictions
-│       ├── model_predictions_for_abdnli.json
-│       └── model_predictions_for_snli_mnli.json
+│   └── prediction_samples
+│       ├── abdnli_random_baseline.json
+│       ├── mnli_random_baseline.json
+│       └── snli_random_baseline.json
+├── pyproject.toml
 ├── requirements.txt
+├── uv.lock
 ├── scripts
 ├── setup.sh
 └── src
 ```
+
+The Hugging Face mirror contains the dataset, not the historical model predictions. Evaluating your own predictions only requires the dataset and your prediction file; see [Evaluate](#evaluate). Reproducing the published model tables additionally requires `data/model_predictions/model_predictions_for_abdnli.json` and `data/model_predictions/model_predictions_for_snli_mnli.json`, which are not included in this mirror or in the repository. The checked-in random baseline files are examples of the prediction format, not replacements for those historical predictions.
 
 ### What is the format?
 #### Data Format
@@ -166,7 +192,7 @@ The fields of the objects are self-explanatory. Please see the following sample 
 ```
 
 #### Model Prediction Format
-We also provide the predictions of BERT, RoBERTa, XLNet, BART, ALBERT, DistilBERT on SNLI, MNLI, and alphaNLI. The data can also be found in `data/model_predictions`.
+The original release provided predictions of BERT, RoBERTa, XLNet, BART, ALBERT, and DistilBERT on SNLI, MNLI, and alphaNLI in `data/model_predictions`. These historical prediction files are separate from the Hugging Face dataset mirror. The excerpts below use comments and ellipses for explanation; prediction files must contain complete, valid JSON.
 ```JS
 // ChaosNLI-alphaNLI 'data/model_predictions/model_predictions_for_abdnli.json'
 {
@@ -213,15 +239,17 @@ We also provide the predictions of BERT, RoBERTa, XLNet, BART, ALBERT, DistilBER
 
 ## Results
 ### How to reproduce the results on the paper?
-To reproduce the results, simply run the following script:
+After downloading the dataset and separately obtaining the historical model prediction files listed above, run the following commands from the repository root:
 ```bash
-source setup.sh
-python src/evaluation/model_pref.py
+uv sync --locked
+uv run --locked python src/evaluation/model_pref.py
 ```
 
-The outputs should match with all the numbers in the table of the paper.
+Downloading the Hugging Face dataset alone is sufficient to evaluate your own predictions, but does not provide the historical model predictions needed by this command.
+
+The following is the original release's output. Per-model JSD, KL, and accuracy retain the original metric definitions. `All Correct Count` now uses the intersection of the examples every model predicts correctly; its corrected values can differ from this historical output.
 ```
-Load Jsonl: /Users/yixin/projects/released_codebase/chaos_nli/data/chaosNLI_v1.0/chaosNLI_alphanli.jsonl
+Load Jsonl: data/chaosNLI_v1.0/chaosNLI_alphanli.jsonl
 1532it [00:00, 54898.24it/s]
 ------------------------------------------------------------
 Data: ChaosNLI - Abductive Commonsense Reasoning (alphaNLI)
@@ -237,7 +265,7 @@ bart-large          	0.2215    	1.5794    	0.8185    	0.814
 albert-xxlarge      	0.2208    	2.9598    	0.844     	0.8473
 distilbert          	0.3101    	1.0345    	0.592     	0.607
 ------------------------------------------------------------
-Load Jsonl: /Users/yixin/projects/released_codebase/chaos_nli/data/chaosNLI_v1.0/chaosNLI_snli.jsonl
+Load Jsonl: data/chaosNLI_v1.0/chaosNLI_snli.jsonl
 1514it [00:00, 71640.88it/s]
 ------------------------------------------------------------
 Data: ChaosNLI - Stanford Natural Language Inference (SNLI)
@@ -253,7 +281,7 @@ bart-large          	0.2203    	0.4714    	0.7424    	0.7827
 albert-xxlarge      	0.235     	0.5342    	0.7153    	0.7814
 distilbert          	0.2439    	0.4682    	0.6711    	0.7021
 ------------------------------------------------------------
-Load Jsonl: /Users/yixin/projects/released_codebase/chaos_nli/data/chaosNLI_v1.0/chaosNLI_mnli_m.jsonl
+Load Jsonl: data/chaosNLI_v1.0/chaosNLI_mnli_m.jsonl
 1599it [00:00, 50454.33it/s]
 ------------------------------------------------------------
 Data: ChaosNLI - Multi-Genre Natural Language Inference (MNLI)
@@ -271,36 +299,71 @@ distilbert          	0.3133    	0.6652    	0.5472    	0.5103
 ------------------------------------------------------------
 ```
 
-To examine **the factor of human agreement on model performance**, check out this informative [jupyter-notebook](https://github.com/easonnie/ChaosNLI/blob/master/src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. 
+To examine **the factor of human agreement on model performance**, check out this informative [jupyter-notebook](src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. The notebook requires the historical model prediction files listed above.
 
 ### Improving Distribution Estimation
 In the [distnli](https://github.com/easonnie/ChaosNLI/tree/master/distnli) folder, we provide implementation of several methods (e.g. Monte Carlo Dropout, Deep Ensemble, Re-Calibration, etc.) used in the Distributed NLI paper that can improve the distribution estimation performance upon the vanilla BERT-style baseline. Please see the README under that folder for detailed instructions.
 
 ## Evaluate
 ### How can I evaluate my own results?
-Build your prediction file according to the sample file in `data/prediction_samples`.  
-**Tip: You will need to popularize both the "`predicted_probabilities`" and "`predicted_label`" fields.**
+Build your prediction file according to the sample files in `data/prediction_samples`. The JSON object maps each model name to a dictionary of example IDs. Each prediction must contain `predicted_label` and either `predicted_probabilities` or `logits`. NLI vectors use the order `[entailment, neutral, contradiction]`, with string labels `entailment`, `neutral`, or `contradiction` (also accepted as `e`, `n`, or `c`). AlphaNLI vectors use `[1, 2]`, with integer labels `1` or `2`. Every evaluated example must have a prediction.
 
-Then, you can evaluate your method with the following script:
+From the repository root, install the evaluation dependencies and download the data:
+
+```bash
+uv sync --locked
+uv run --locked python scripts/download_data.py
 ```
+
+These examples run on CPU using the checked-in random baseline predictions. Replace `--prediction_file` with your own prediction file to evaluate your method. The commands configure their own import paths, so sourcing `setup.sh` is optional.
+
+```bash
 # For MNLI:
-python src/scripts/evaluate.py \
-    --task_name uncertainty_nli \ 
-    --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_mnli_m.jsonl \
-    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/mnli_random_baseline.json
+uv run --locked python src/scripts/evaluate.py \
+    --task_name uncertainty_nli \
+    --data_file data/chaosNLI_v1.0/chaosNLI_mnli_m.jsonl \
+    --prediction_file data/prediction_samples/mnli_random_baseline.json
 
 # For SNLI:
-python src/scripts/evaluate.py \
+uv run --locked python src/scripts/evaluate.py \
     --task_name uncertainty_nli \
-    --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_snli.jsonl \
-    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/snli_random_baseline.json
+    --data_file data/chaosNLI_v1.0/chaosNLI_snli.jsonl \
+    --prediction_file data/prediction_samples/snli_random_baseline.json
 
 # For alphaNLI:
-python src/scripts/evaluate.py \
-    --task_name uncertainty_abdnli
-    --data_file [path_of_chaos_nli_repo]/chaos_nli/data/chaosNLI_v1.0/chaosNLI_alphanli.jsonl
-    --prediction_file [path_of_chaos_nli_repo]/chaos_nli/data/prediction_samples/abdnli_random_baseline.json
+uv run --locked python src/scripts/evaluate.py \
+    --task_name uncertainty_abdnli \
+    --data_file data/chaosNLI_v1.0/chaosNLI_alphanli.jsonl \
+    --prediction_file data/prediction_samples/abdnli_random_baseline.json
 ```
+
+For compatibility with the published results, the column named `JSD` reports Jensen-Shannon **distance** (the square root of the divergence), using natural logarithms. `KL` is `KL(human || model)`. Both are averaged over examples. Model probabilities are floored at `1e-15` and renormalized for finite KL values. Invalid distributions and missing predictions produce an error rather than a partial score. Empty entropy bins and empty all-correct subsets have undefined metrics (`NaN`).
+
+## Development and verification
+
+Run the regression checks in the locked evaluation environment:
+
+```bash
+uv sync --locked
+uv run --locked python -m unittest discover -s tests -v
+```
+
+To verify a fresh download, the three random baseline scores, and the NLI/alphaNLI conversion, ensemble, calibration, and held-out evaluation workflows:
+
+```bash
+uv run --locked python scripts/verify_evaluation.py
+```
+
+This command uses a temporary directory and removes its downloaded data and predictions when it finishes. To reuse existing data for an offline check, pass `--data-dir data/chaosNLI_v1.0`. GitHub Actions runs the regression and real-data checks on Linux and macOS.
+
+Declare evaluation dependencies in `pyproject.toml` and commit the updated `uv.lock`. Regenerate the pip compatibility file after dependency changes:
+
+```bash
+uv lock
+uv export --locked --no-dev --no-hashes --no-emit-project --output-file requirements.txt
+```
+
+Generated environments, downloaded datasets, Python caches, and plot PDFs are ignored by Git. Keep notebook outputs cleared before committing them.
 
 ## Citation
 

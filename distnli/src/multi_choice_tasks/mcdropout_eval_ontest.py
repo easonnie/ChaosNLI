@@ -141,9 +141,9 @@ def main():
     else:  # distributed multiGPU training
         #########################################################
         args.world_size = args.gpus_per_node * args.num_nodes  #
-        os.environ['MASTER_ADDR'] = 'localhost'
+        os.environ.setdefault('MASTER_ADDR', 'localhost')
         # maybe we will automatically retrieve the IP later.
-        os.environ['MASTER_PORT'] = '88888'  #
+        os.environ.setdefault('MASTER_PORT', '29500')
         mp.spawn(start, nprocs=args.gpus_per_node, args=(args,))  # spawn how many process in this node
         # remember train is called as train(i, args).
         #########################################################
@@ -179,7 +179,7 @@ def start(local_rank, args):
 
     model = MultichoiceModel(encoder_model, args.number_of_choices)
 
-    model.load_state_dict(torch.load(args.load_model_path), strict=False)
+    model.load_state_dict(torch.load(args.load_model_path, map_location='cpu'), strict=False)
 
     padding_token_value = tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0]
     padding_segement_value = model_class_item["padding_segement_value"]

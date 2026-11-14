@@ -1,3 +1,8 @@
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from evaluation.tools import calculate_divergence_bwt_model_human_simplify, build_entropy_bins, \
     calculate_per_bin_results_simplify, build_bin_items
 from utils import common, list_dict_data_tool
@@ -16,6 +21,8 @@ def model_perf_binned(dataset_name, task_name, data_file, model_prediction_file,
 
     d_list = common.load_jsonl(data_file)
     collected_data_dict = list_dict_data_tool.list_to_dict(d_list, key_fields='uid')
+    if len(collected_data_dict) != len(d_list):
+        raise ValueError('Duplicate UIDs in the evaluation dataset')
     model_prediction_dict = common.load_json(model_prediction_file)
 
     bined_item = build_entropy_bins(collected_data_dict, bin_num, type=split_type)

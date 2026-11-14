@@ -1,4 +1,7 @@
 # Distributed NLI: Learning to Predict Human Opinion Distributions for Language Reasoning
+
+The maintained CPU evaluation and prediction postprocessing workflow is documented under [Evaluate existing predictions on CPU](#evaluate-existing-predictions-on-cpu) and is covered by CI. The training, training-data preprocessing, and model inference instructions are retained for the original experiments; those legacy workflows have not been validated by the current CI.
+
 **Outline**
 
 * [Dependencies](#dependencies)
@@ -11,7 +14,7 @@
 
 The original training and model inference code was tested on Python 3.7 and PyTorch 1.6.0. Keep that environment separate from the root uv project, which manages CPU evaluation and prediction postprocessing with Python 3.12.
 
-Other dependencies are listed in `requirements.txt` and can be installed by running `pip install -r requirements.txt`
+Install the legacy training dependencies from `distnli/requirements.txt` in that separate environment. For CPU scoring and postprocessing, use the root uv project as described below.
 
 ## Data Preprocessing
 

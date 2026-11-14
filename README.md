@@ -85,7 +85,9 @@ Observation Start | Hypothesis 1 | Hypothesis 2 | Observation End | New Annotati
 --- | --- | --- | --- | --- | --- | ---
 Ruth was playing video games.|Ruth started playing a new game.|Ruth challenged her friend to a game of golf.|She won the game easily.|1(58), 2(42)|1|1(99.99%), 2(0.01%)
 Gina entered her classroom and went to her desk.|Tami had asked Gina not to talk with the gossip girls.|She started talking to some friends, but a bully named Tami butted in.|The fact that Tami was still talking to them made Gina uncomfortable.|1(50), 2(50)|2|1(0.01%), 2(99.99%)
-Amy and her friends were out at 3 AM.|They started getting followed by a policeman, ran, and hid behind a building.|The decided to break into the football field. When suddenly they saw a flashlight comming towards them. They all started running for the bleachers.|They stayed there breathing hard, and praying they hadn't been seen.|1(50), 2(50)|2|1(57.53%), 2(32.47%)
+Amy and her friends were out at 3 AM.|They started getting followed by a policeman, ran, and hid behind a building.|The decided to break into the football field. When suddenly they saw a flashlight comming towards them. They all started running for the bleachers.|They stayed there breathing hard, and praying they hadn't been seen.|1(50), 2(50)|2|Unavailable
+
+The model probabilities for the third example are omitted because the original values sum to 90%.
 
 ## Scoreboard
 ### ChaosNLI - SNLI
@@ -136,7 +138,9 @@ The downloader also works independently with `python3 scripts/download_data.py` 
 │       ├── abdnli_random_baseline.json
 │       ├── mnli_random_baseline.json
 │       └── snli_random_baseline.json
+├── pyproject.toml
 ├── requirements.txt
+├── uv.lock
 ├── scripts
 ├── setup.sh
 └── src
@@ -188,7 +192,7 @@ The fields of the objects are self-explanatory. Please see the following sample 
 ```
 
 #### Model Prediction Format
-The original release provided predictions of BERT, RoBERTa, XLNet, BART, ALBERT, and DistilBERT on SNLI, MNLI, and alphaNLI in `data/model_predictions`. These historical prediction files are separate from the Hugging Face dataset mirror. Their format is shown below.
+The original release provided predictions of BERT, RoBERTa, XLNet, BART, ALBERT, and DistilBERT on SNLI, MNLI, and alphaNLI in `data/model_predictions`. These historical prediction files are separate from the Hugging Face dataset mirror. The excerpts below use comments and ellipses for explanation; prediction files must contain complete, valid JSON.
 ```JS
 // ChaosNLI-alphaNLI 'data/model_predictions/model_predictions_for_abdnli.json'
 {
@@ -295,14 +299,14 @@ distilbert          	0.3133    	0.6652    	0.5472    	0.5103
 ------------------------------------------------------------
 ```
 
-To examine **the factor of human agreement on model performance**, check out this informative [jupyter-notebook](https://github.com/easonnie/ChaosNLI/blob/master/src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. 
+To examine **the factor of human agreement on model performance**, check out this informative [jupyter-notebook](src/notebook/binned_plot.ipynb) to find the partitioned results according to the entropy range. The notebook requires the historical model prediction files listed above.
 
 ### Improving Distribution Estimation
 In the [distnli](https://github.com/easonnie/ChaosNLI/tree/master/distnli) folder, we provide implementation of several methods (e.g. Monte Carlo Dropout, Deep Ensemble, Re-Calibration, etc.) used in the Distributed NLI paper that can improve the distribution estimation performance upon the vanilla BERT-style baseline. Please see the README under that folder for detailed instructions.
 
 ## Evaluate
 ### How can I evaluate my own results?
-Build your prediction file according to the sample files in `data/prediction_samples`. The JSON object maps each model name to a dictionary of example IDs. Each prediction must contain `predicted_label` and either `predicted_probabilities` or `logits`. NLI vectors use the order `[entailment, neutral, contradiction]`; alphaNLI vectors use `[1, 2]`. Every evaluated example must have a prediction.
+Build your prediction file according to the sample files in `data/prediction_samples`. The JSON object maps each model name to a dictionary of example IDs. Each prediction must contain `predicted_label` and either `predicted_probabilities` or `logits`. NLI vectors use the order `[entailment, neutral, contradiction]`, with string labels `entailment`, `neutral`, or `contradiction` (also accepted as `e`, `n`, or `c`). AlphaNLI vectors use `[1, 2]`, with integer labels `1` or `2`. Every evaluated example must have a prediction.
 
 From the repository root, install the evaluation dependencies and download the data:
 
